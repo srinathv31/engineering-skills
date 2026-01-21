@@ -88,3 +88,4 @@ When working in a codebase:
 |-------|-------------|
 | `drizzle-core` | Drizzle ORM schema definition, table creation, relationships, constraints |
 | `drizzle-mssql` | MSSQL databases, SQL Server, T-SQL, drizzle-orm/mssql-core |
+| `shadcn-ui` | shadcn/ui components, Next.js UI, forms with react-hook-form, data tables, charts, Radix UI primitives |
