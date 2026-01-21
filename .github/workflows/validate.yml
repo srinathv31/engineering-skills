@@ -1,0 +1,76 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check skill directory naming (kebab-case)
+        run: |
+          echo "Checking skill directory naming conventions..."
+          for dir in skills/*/; do
+            dirname=$(basename "$dir")
+            if ! echo "$dirname" | grep -qE '^[a-z][a-z0-9]*(-[a-z0-9]+)*$'; then
+              echo "Error: '$dirname' is not kebab-case"
+              exit 1
+            fi
+            echo "✓ $dirname"
+          done
+
+      - name: Check required SKILL.md files
+        run: |
+          echo "Checking for required SKILL.md files..."
+          for dir in skills/*/; do
+            if [ ! -f "${dir}SKILL.md" ]; then
+              echo "Error: Missing SKILL.md in $dir"
+              exit 1
+            fi
+            echo "✓ ${dir}SKILL.md exists"
+          done
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          echo "Validating SKILL.md frontmatter..."
+          for skill in skills/*/SKILL.md; do
+            echo "Checking $skill..."
+
+            # Check for frontmatter delimiters
+            if ! head -1 "$skill" | grep -q '^---$'; then
+              echo "Error: $skill missing opening frontmatter delimiter"
+              exit 1
+            fi
+
+            # Extract frontmatter and check required fields
+            frontmatter=$(sed -n '2,/^---$/p' "$skill" | head -n -1)
+
+            if ! echo "$frontmatter" | grep -q '^name:'; then
+              echo "Error: $skill missing 'name' in frontmatter"
+              exit 1
+            fi
+
+            if ! echo "$frontmatter" | grep -q '^description:'; then
+              echo "Error: $skill missing 'description' in frontmatter"
+              exit 1
+            fi
+
+            echo "✓ $skill has valid frontmatter"
+          done
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "=== Validation Summary ==="
+          echo "Skills found:"
+          for dir in skills/*/; do
+            name=$(basename "$dir")
+            echo "  - $name"
+          done
+          echo ""
+          echo "All validations passed!"
