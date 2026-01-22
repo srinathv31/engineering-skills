@@ -90,3 +90,4 @@ When working in a codebase:
 | `drizzle-mssql` | MSSQL databases, SQL Server, T-SQL, drizzle-orm/mssql-core |
 | `shadcn-ui` | shadcn/ui components, Next.js UI, forms with react-hook-form, data tables, charts, Radix UI primitives |
 | `typescript-type-safety` | TypeScript type narrowing, inference decisions, strict compiler settings, exhaustive checks |
+| `nodejs-practices` | Zod validation (parse vs safeParse, schema composition), Promise patterns (all vs allSettled, concurrent vs sequential), error handling (operational vs programmer errors, custom error classes) |
